@@ -6,9 +6,6 @@ from struct import unpack
 from .packet import Packet
 
 class PCAP():
-	"""
-		TODO: Swapping!
-	"""
 	magic_number = None
 	version_major = None
 	version_minor = None
@@ -17,6 +14,8 @@ class PCAP():
 	snaplen = None
 	network = None
 	packets = None
+	
+	swapped = False
 	
 	def __init__(self, pcap_bytes):
 		
@@ -27,6 +26,12 @@ class PCAP():
 	
 	def __get_header(self, header):
 		self.magic_number, self.version_major, self.version_minor, self.thiszone, self.sigfigs, self.snaplen, self.network = unpack('IHHiIII', header)
+		if self.magic_number == 2712847316:
+			self.swapped = False
+		elif self.magic_number == 3569595041:
+			self.swapped = True
+		else:
+			raise Exception()
 	
 	def __get_packets(self, content):
 		file_pointer = 0

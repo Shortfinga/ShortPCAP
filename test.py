@@ -15,10 +15,14 @@ if len(sys.argv) < 2:
 content = open(sys.argv[1], "rb").read()
 
 p = PCAP(content)
-print(p)
-
 for packet in p.packets:
-	print(packet)
+
 	e = Ethernet(packet)
-	print(e)
-	print(IPv4(e))
+	ip = e.get_payload()
+	try:
+		tcp = ip.get_payload()
+		print(tcp)
+		#print_hex(tcp.payload)
+		print(tcp.payload)
+	except NotImplementedError:
+		pass

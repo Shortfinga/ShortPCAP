@@ -3,10 +3,13 @@
 
 from struct import unpack
 
+from .ipv4 import IPv4
 
 class Ethernet():
 	"""
 		TODO: VLAN_ID and other infos
+		
+		unpack !
 	"""
 	dest = None
 	src = None
@@ -37,6 +40,11 @@ class Ethernet():
 				mac_as_str += ":"
 			mac_as_str += format(b, '02x')
 		return mac_as_str
+	
+	def get_payload(self):
+		#is it a IPv4?
+		if self.payload[0] >> 4 == 4:
+			return IPv4(self.payload)
 	
 	def __str__(self):
 		return "ShortPCAP.Ethernet(dest={},src={},packet_type={})".format(
